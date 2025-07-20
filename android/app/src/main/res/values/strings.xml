@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">prism-contacts</string>
+    <string name="title_activity_main">prism-contacts</string>
+    <string name="package_name">com.prism.contacts</string>
+    <string name="custom_url_scheme">com.prism.contacts</string>
+</resources>
