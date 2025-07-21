@@ -11,41 +11,44 @@
         <span class="text-xs text-gray-500">تعداد گروه‌ها</span>
       </div>
     </div>
-    <canvas ref="chartRef" height="120"></canvas>
+    <canvas
+ref="chartRef" height="120" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import Chart from 'chart.js/auto'
-const props = defineProps<{ contacts: any[], groups: any[] }>()
-const chartRef = ref<HTMLCanvasElement | null>(null)
-let chart: Chart | null = null
+import { ref, onMounted, watch } from 'vue';
+import Chart from 'chart.js/auto';
+const props = defineProps<{ contacts: any[]; groups: any[] }>();
+const chartRef = ref<HTMLCanvasElement | null>(null);
+let chart: Chart | null = null;
 
 const renderChart = () => {
-  if (!chartRef.value) return
-  if (chart) chart.destroy()
-  const groupCounts = props.groups.map(g => ({
+  if (!chartRef.value) return;
+  if (chart) chart.destroy();
+  const groupCounts = props.groups.map((g) => ({
     name: g.name,
-    count: props.contacts.filter(c => c.groupIds && c.groupIds.includes(g.id)).length
-  }))
+    count: props.contacts.filter((c) => c.groupIds && c.groupIds.includes(g.id)).length,
+  }));
   chart = new Chart(chartRef.value, {
     type: 'bar',
     data: {
-      labels: groupCounts.map(g => g.name),
-      datasets: [{
-        label: 'تعداد مخاطبین هر گروه',
-        data: groupCounts.map(g => g.count),
-        backgroundColor: 'rgba(59,130,246,0.5)'
-      }]
+      labels: groupCounts.map((g) => g.name),
+      datasets: [
+        {
+          label: 'تعداد مخاطبین هر گروه',
+          data: groupCounts.map((g) => g.count),
+          backgroundColor: 'rgba(59,130,246,0.5)',
+        },
+      ],
     },
     options: {
       plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true } }
-    }
-  })
-}
+      scales: { y: { beginAtZero: true } },
+    },
+  });
+};
 
-onMounted(renderChart)
-watch(() => [props.contacts, props.groups], renderChart, { deep: true })
-</script> 
+onMounted(renderChart);
+watch(() => [props.contacts, props.groups], renderChart, { deep: true });
+</script>
