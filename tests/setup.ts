@@ -1,45 +1,35 @@
-// jest-dom و سایر ابزارها
-import '@testing-library/jest-dom';
-import { vi, beforeEach } from 'vitest';
-import 'fake-indexeddb/auto';
+import { config } from '@vue/test-utils';
 
-// موک userStore
-vi.mock('../../src/stores/user', () => ({
-  useUserStore: () => ({
-    currentUser: { id: 1, username: 'test', role: 'admin', passwordHash: '' },
-    loadFromStorage: () => {},
-  }),
-}));
+// Mock Vue Router
+const mockRouter = {
+  push: vi.fn(),
+  replace: vi.fn(),
+  go: vi.fn(),
+  back: vi.fn(),
+  forward: vi.fn(),
+  currentRoute: { value: { path: '/', name: 'home' } },
+  resolve: vi.fn((to) => ({ href: to })),
+};
 
-// موک db (Dexie)
-let contactsData: any[] = [];
-vi.mock('../../src/database/dexie', () => ({
-  db: {
-    contacts: {
-      toArray: async () => contactsData,
-      where: () => ({ equals: async () => contactsData }),
-      add: async (contact: any) => {
-        const id = contactsData.length + 1;
-        contactsData.push({ ...contact, id });
-        return id;
-      },
-      update: async (id: number, updated: any) => {
-        const idx = contactsData.findIndex((c) => c.id === id);
-        if (idx !== -1) contactsData[idx] = { ...contactsData[idx], ...updated };
-      },
-      delete: async (id: number) => {
-        contactsData = contactsData.filter((c) => c.id !== id);
-      },
-    },
-  },
-  Contact: {} as any,
-}));
+// Simple translation mock
+const t = (key: string) => key;
 
-beforeEach(() => {
-  // دیتابیس fake-indexeddb را قبل هر تست ریست کن
-  if (typeof indexedDB !== 'undefined' && indexedDB.databases) {
-    indexedDB.databases().then((dbs) => {
-      dbs.forEach((db) => indexedDB.deleteDatabase(db.name!));
-    });
-  }
-}); 
+// Global mocks
+config.global.mocks = {
+  $t: t,
+  $router: mockRouter,
+  $route: mockRouter.currentRoute,
+  $i18n: { t },
+};
+
+// Global components
+config.global.components = {
+  'font-awesome-icon': { template: '<span />' },
+  'router-link': { props: ['to'], template: '<a :href="to"><slot /></a>' },
+};
+
+// Global stubs
+config.global.stubs = {
+  'font-awesome-icon': true,
+  'router-link': { template: '<a><slot /></a>' },
+};

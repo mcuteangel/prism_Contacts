@@ -33,6 +33,19 @@ export default [
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
     },
-    ignores: ['dist/', 'node_modules/', 'public/', 'android/', 'src-tauri/'],
+    ignores: [
+      'dist/',
+      'node_modules/',
+      'public/',
+      'android/',
+      'src-tauri/',
+      '*.d.ts',
+      '*.js',
+      '!.*.js',
+      '!.*.js',
+      '!.vitepress',
+      '!.vscode',
+      '*.md'
+    ],
   },
-]; 
+];
